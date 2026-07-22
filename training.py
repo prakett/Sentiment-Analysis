@@ -21,7 +21,7 @@ y_test = test_df["label"]
 
 
 vectorizer = TfidfVectorizer(
-    max_features=35000,
+    max_features=50000,
     ngram_range=(1, 2)
 )
 
@@ -30,9 +30,10 @@ X_val_tfidf = vectorizer.transform(X_val)
 X_test_tfidf = vectorizer.transform(X_test)
 
 model = LogisticRegression(
-    max_iter=1000,
-    solver = "saga",
-    random_state=42
+    max_iter=2000,
+    solver = "lbfgs",
+    random_state=42,
+    # class_weight = "balanced"
 )
 
 model.fit(X_train_tfidf, y_train)
