@@ -1,6 +1,6 @@
 import pickle
 
-with open("sentiment_model2.pkl", "rb") as f:
+with open("models_logistic_regression\\sentiment_model2.pkl", "rb") as f:
     sentiment_model = pickle.load(f)
 
 model = sentiment_model["model"]
