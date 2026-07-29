@@ -36,23 +36,19 @@ X_val = vectorizer.transform(X_val)
 print("Transforming test...")
 X_test = vectorizer.transform(X_test)
 
-alphas = [0.01, 0.05, 0.1, 0.5, 1.0, 2.0]
 
-for alpha in alphas:
-    print(f"\n===== Alpha = {alpha} =====")
+model = MultinomialNB(alpha=2.0)
+model.fit(X_train, y_train)
 
-    model = MultinomialNB(alpha=alpha)
-    model.fit(X_train, y_train)
+val_pred = model.predict(X_val)
+test_pred = model.predict(X_test)
 
-    val_pred = model.predict(X_val)
-    test_pred = model.predict(X_test)
-
-    print("Validation:", accuracy_score(y_val, val_pred))
-    print("Test:", accuracy_score(y_test, test_pred))
+print("Validation:", accuracy_score(y_val, val_pred))
+print("Test:", accuracy_score(y_test, test_pred))
     
-    print("Validation Accuracy:", accuracy_score(y_val, val_pred))
-    print(classification_report(y_val, val_pred))
+print("Validation Accuracy:", accuracy_score(y_val, val_pred))
+print(classification_report(y_val, val_pred))
     
-    test_pred = model.predict(X_test)
-    print("Test Accuracy:", accuracy_score(y_test, test_pred))
-    print(classification_report(y_test, test_pred))
+test_pred = model.predict(X_test)
+print("Test Accuracy:", accuracy_score(y_test, test_pred))
+print(classification_report(y_test, test_pred))

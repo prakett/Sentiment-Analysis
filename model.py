@@ -1,32 +1,38 @@
-import pickle
+# import pickle
 
-with open("models_logistic_regression\\sentiment_model2.pkl", "rb") as f:
-    sentiment_model = pickle.load(f)
+# with open("models_logistic_regression\\sentiment_model2.pkl", "rb") as f:
+#     sentiment_model = pickle.load(f)
 
-model = sentiment_model["model"]
-vectorizer = sentiment_model["vectorizer"]
-label_map = sentiment_model["label_map"]  
+# model = sentiment_model["model"]
+# vectorizer = sentiment_model["vectorizer"]
+# label_map = sentiment_model["label_map"]  
 
-print("=" * 50)
-print("Sentiment Analysis")
-print("Type 'exit' to quit.")
-print("=" * 50)
+# print("=" * 50)
+# print("Sentiment Analysis")
+# print("Type 'exit' to quit.")
+# print("=" * 50)
 
-while True:
-    text = input("\nEnter a sentence: ").strip()
+# while True:
+#     text = input("\nEnter a sentence: ").strip()
 
-    if text.lower() == "exit":
-        print("Goodbye!")
-        break
+#     if text.lower() == "exit":
+#         print("Goodbye!")
+#         break
 
-    text_vector = vectorizer.transform([text])
+#     text_vector = vectorizer.transform([text])
 
-    prediction = model.predict(text_vector)[0]
-    probabilities = model.predict_proba(text_vector)[0]
+#     prediction = model.predict(text_vector)[0]
+#     probabilities = model.predict_proba(text_vector)[0]
 
-    print(f"\nPredicted Sentiment: {label_map[prediction]}")
-    print(f"Confidence: {probabilities[prediction] * 100:.2f}%")
+#     print(f"\nPredicted Sentiment: {label_map[prediction]}")
+#     print(f"Confidence: {probabilities[prediction] * 100:.2f}%")
 
-    print("\nProbabilities:")
-    print(f"Negative : {probabilities[0] * 100:.2f}%")
-    print(f"Positive : {probabilities[1] * 100:.2f}%")
+#     print("\nProbabilities:")
+#     print(f"Negative : {probabilities[0] * 100:.2f}%")
+#     print(f"Positive : {probabilities[1] * 100:.2f}%")
+
+
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
+
+trainer.save_model("sentiment_roberta_200k")
+tokenizer.save_pretrained("sentiment_roberta_200k")
