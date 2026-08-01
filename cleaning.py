@@ -5,12 +5,12 @@ from sklearn.model_selection import train_test_split
 # CONFIGURATION
 # ==========================================================
 
-INPUT_FILE = r"dataset\sentiment140_cleaned.csv"
+INPUT_FILE = r"dataset_pre_processed\preprocessed_dataset.csv"
 
 TEXT_COLUMN = "cleaned_text"
 LABEL_COLUMN = "target"
 
-TARGET_SIZE = 200000
+TARGET_SIZE = 800000
 RANDOM_STATE = 42
 
 # ==========================================================
