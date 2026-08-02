@@ -10,7 +10,7 @@ INPUT_FILE = r"dataset_pre_processed\preprocessed_dataset.csv"
 TEXT_COLUMN = "cleaned_text"
 LABEL_COLUMN = "target"
 
-TARGET_SIZE = 800000
+TARGET_SIZE = 200000
 RANDOM_STATE = 42
 
 # ==========================================================

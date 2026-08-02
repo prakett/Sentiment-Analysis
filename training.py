@@ -1,10 +1,10 @@
 import os
 
-import joblib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from gensim.models import KeyedVectors
+from gensim.models import Doc2Vec
+from gensim.models.doc2vec import TaggedDocument
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
     ConfusionMatrixDisplay,
@@ -25,98 +25,100 @@ TEXT_COLUMN = "cleaned_text"
 LABEL_COLUMN = "target"
 
 for df in (train_df, val_df, test_df):
-    df[TEXT_COLUMN] = df[TEXT_COLUMN].fillna("").astype(str)
+    df[TEXT_COLUMN] = (
+        df[TEXT_COLUMN]
+        .fillna("")
+        .astype(str)
+    )
 
 print("Train:", train_df.shape)
 print("Validation:", val_df.shape)
 print("Test:", test_df.shape)
 
+# ==========================================================
+# Prepare Tagged Documents
+# ==========================================================
 
-print("\nLoading Google News Word2Vec...")
+print("\nPreparing Tagged Documents...")
 
-word2vec = KeyedVectors.load_word2vec_format(
-    "GoogleNews-vectors-negative300.bin.gz",
-    binary=True
-)
-
-print("Vocabulary Size:", len(word2vec.index_to_key))
-
-EMBEDDING_DIM = word2vec.vector_size
-
-word_cache = {}
-
-def sentence_vector(sentence):
-
-    words = sentence.split()
-
-    valid_words = []
-
-    for word in words:
-
-        if word not in word_cache:
-
-            if word in word2vec:
-                word_cache[word] = word2vec[word]
-            else:
-                word_cache[word] = None
-
-        if word_cache[word] is not None:
-            valid_words.append(word)
-
-    if len(valid_words) == 0:
-        return np.zeros(EMBEDDING_DIM, dtype=np.float32)
-
-    vectors = np.vstack([word_cache[word] for word in valid_words])
-
-    return vectors.mean(axis=0)
-
-def build_embeddings(texts, split_name):
-
-    file_name = f"{split_name}_embeddings.npy"
-
-    if os.path.exists(file_name):
-        print(f"\nLoading {file_name}...")
-        return np.load(file_name)
-
-    print(f"\nCreating {split_name} embeddings...")
-
-    embeddings = np.zeros(
-        (len(texts), EMBEDDING_DIM),
-        dtype=np.float32
+train_documents = [
+    TaggedDocument(
+        words=text.split(),
+        tags=[str(i)]
     )
+    for i, text in enumerate(train_df[TEXT_COLUMN])
+]
 
-    for i, text in enumerate(tqdm(texts)):
-        embeddings[i] = sentence_vector(text)
+print("\nTraining Doc2Vec...\n")
 
-    np.save(file_name, embeddings)
-
-    print(f"{file_name} saved.")
-
-    return embeddings
-
-
-
-X_train = build_embeddings(
-    train_df[TEXT_COLUMN].tolist(),
-    "train"
+doc2vec = Doc2Vec(
+    vector_size=400,
+    window=10,
+    min_count=2,
+    workers=os.cpu_count(),
+    epochs=60,
+    dm=1,
+    negative=15,
+    sample=1e-5,
+    seed=42
 )
 
-X_val = build_embeddings(
-    val_df[TEXT_COLUMN].tolist(),
-    "validation"
+doc2vec.build_vocab(train_documents)
+
+doc2vec.train(
+    train_documents,
+    total_examples=doc2vec.corpus_count,
+    epochs=doc2vec.epochs
 )
 
-X_test = build_embeddings(
-    test_df[TEXT_COLUMN].tolist(),
-    "test"
-)
+print("\nDoc2Vec Training Complete!")
+
+EMBEDDING_DIM = doc2vec.vector_size
+
+print("\nEmbedding Dimension:", EMBEDDING_DIM)
+
+# ==========================================================
+# Create Document Embeddings
+# ==========================================================
+
+print("\nGenerating Training Embeddings...")
+
+X_train = np.array([
+    doc2vec.dv[str(i)]
+    for i in tqdm(range(len(train_df)))
+])
+
+print("\nGenerating Validation Embeddings...")
+
+X_val = np.array([
+    doc2vec.infer_vector(
+        text.split(),
+        epochs=50
+    )
+    for text in tqdm(val_df[TEXT_COLUMN])
+])
+
+print("\nGenerating Test Embeddings...")
+
+X_test = np.array([
+    doc2vec.infer_vector(
+        text.split(),
+        epochs=20
+    )
+    for text in tqdm(test_df[TEXT_COLUMN])
+])
 
 y_train = train_df[LABEL_COLUMN]
 y_val = val_df[LABEL_COLUMN]
 y_test = test_df[LABEL_COLUMN]
 
-print("\nEmbedding Shape:", X_train.shape)
+print("\nTraining Embedding Shape :", X_train.shape)
+print("Validation Shape         :", X_val.shape)
+print("Test Shape               :", X_test.shape)
 
+# ==========================================================
+# Train Logistic Regression
+# ==========================================================
 
 print("\nTraining Logistic Regression...\n")
 
@@ -127,6 +129,11 @@ model = LogisticRegression(
 
 model.fit(X_train, y_train)
 
+print("\nTraining Complete!")
+
+# ==========================================================
+# Validation
+# ==========================================================
 
 val_pred = model.predict(X_val)
 
@@ -137,6 +144,9 @@ print("Precision:", precision_score(y_val, val_pred))
 print("Recall   :", recall_score(y_val, val_pred))
 print("F1 Score :", f1_score(y_val, val_pred))
 
+# ==========================================================
+# Test
+# ==========================================================
 
 test_pred = model.predict(X_test)
 
@@ -151,6 +161,9 @@ print("\nClassification Report\n")
 
 print(classification_report(y_test, test_pred))
 
+# ==========================================================
+# Confusion Matrix
+# ==========================================================
 
 cm = confusion_matrix(y_test, test_pred)
 
@@ -160,10 +173,7 @@ disp = ConfusionMatrixDisplay(
 )
 
 disp.plot(cmap="Blues")
-plt.title("Word2Vec + Logistic Regression")
+plt.title("Doc2Vec + Logistic Regression")
 plt.show()
 
-
-joblib.dump(model, "word2vec_logistic_regression.pkl")
-
-print("\nModel saved successfully!")
+print("\nTraining Completed!")
