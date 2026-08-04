@@ -1,38 +1,66 @@
-# import pickle
-
-# with open("models_logistic_regression\\sentiment_model2.pkl", "rb") as f:
-#     sentiment_model = pickle.load(f)
-
-# model = sentiment_model["model"]
-# vectorizer = sentiment_model["vectorizer"]
-# label_map = sentiment_model["label_map"]  
-
-# print("=" * 50)
-# print("Sentiment Analysis")
-# print("Type 'exit' to quit.")
-# print("=" * 50)
-
-# while True:
-#     text = input("\nEnter a sentence: ").strip()
-
-#     if text.lower() == "exit":
-#         print("Goodbye!")
-#         break
-
-#     text_vector = vectorizer.transform([text])
-
-#     prediction = model.predict(text_vector)[0]
-#     probabilities = model.predict_proba(text_vector)[0]
-
-#     print(f"\nPredicted Sentiment: {label_map[prediction]}")
-#     print(f"Confidence: {probabilities[prediction] * 100:.2f}%")
-
-#     print("\nProbabilities:")
-#     print(f"Negative : {probabilities[0] * 100:.2f}%")
-#     print(f"Positive : {probabilities[1] * 100:.2f}%")
-
-
+import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-trainer.save_model("sentiment_roberta_200k")
-tokenizer.save_pretrained("sentiment_roberta_200k")
+MODEL_PATH = "saved_roberta"
+
+print("Loading RoBERTa model...")
+
+tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
+
+model = AutoModelForSequenceClassification.from_pretrained(
+    MODEL_PATH
+)
+
+device = torch.device(
+    "cuda" if torch.cuda.is_available() else "cpu"
+)
+
+model.to(device)
+model.eval()
+
+print("Model loaded successfully!")
+
+labels = {
+    0: "Negative",
+    1: "Positive"
+}
+
+
+def predict_sentiment(text):
+
+    inputs = tokenizer(
+        text,
+        return_tensors="pt",
+        truncation=True,
+        padding=True,
+        max_length=128
+    )
+
+    inputs = {
+        key: value.to(device)
+        for key, value in inputs.items()
+    }
+
+    with torch.no_grad():
+
+        outputs = model(**inputs)
+
+        probabilities = torch.softmax(
+            outputs.logits,
+            dim=1
+        )
+
+        confidence, prediction = torch.max(
+            probabilities,
+            dim=1
+        )
+
+    return {
+        "prediction": labels[prediction.item()],
+        "confidence": round(confidence.item() * 100, 2)
+    }
+
+
+from model import predict_sentiment
+
+predict_sentiment("I absolutely loved this movie.")

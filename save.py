@@ -1,5 +1,5 @@
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 MODEL_PATH = "saved_roberta"
 
@@ -32,4 +32,3 @@ while True:
     probs = torch.softmax(outputs.logits, dim=1)[0]
     prediction = torch.argmax(probs).item()
 
-    print(f"AI: {labels[prediction]} ({probs[prediction]*100:.2f}%)\n")

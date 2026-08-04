@@ -77,9 +77,6 @@ EMBEDDING_DIM = doc2vec.vector_size
 
 print("\nEmbedding Dimension:", EMBEDDING_DIM)
 
-# ==========================================================
-# Create Document Embeddings
-# ==========================================================
 
 print("\nGenerating Training Embeddings...")
 
