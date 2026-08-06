@@ -26,6 +26,9 @@ labels = {
 }
 
 
+THRESHOLD = 0.70  # Change this value as needed
+
+
 def predict_sentiment(text):
 
     inputs = tokenizer(
@@ -50,14 +53,28 @@ def predict_sentiment(text):
             dim=1
         )
 
-        confidence, prediction = torch.max(
-            probabilities,
-            dim=1
-        )
+    negative_probability = probabilities[0][0].item()
+    positive_probability = probabilities[0][1].item()
+
+    if positive_probability >= THRESHOLD:
+        prediction = "Positive"
+        confidence = positive_probability
+    else:
+        prediction = "Negative"
+        confidence = negative_probability
 
     return {
-        "prediction": labels[prediction.item()],
-        "confidence": round(confidence.item() * 100, 2)
+        "prediction": prediction,
+        "confidence": round(confidence * 100, 2),
+        "probabilities": {
+            "positive": round(positive_probability * 100, 2),
+            "negative": round(negative_probability * 100, 2)
+        },
+        "logits": {
+            "positive": round(outputs.logits[0][1].item(), 4),
+            "negative": round(outputs.logits[0][0].item(), 4)
+        },
+        "threshold": THRESHOLD
     }
 
 
