@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Sentiment Analysis Dashboard</title>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <div class="app">
+
+<!-- Sidebar -->
+<aside class="sidebar">
+
+  <div class="logo">
+    <img src="/logoImage.jpg" alt="Sentiment Analysis Logo">
+    <div>
+      <h2>Sentiment</h2>
+      <span>Analysis</span>
+    </div>
+  </div>
+
+  <nav class="navBar">
+    <ul>
+      <li>
+        <a href="#Home" class="active">
+          <span>⌂</span>
+          Home
+        </a>
+      </li>
+
+      <li>
+        <a href="#About">
+          <span>◉</span>
+          About
+        </a>
+      </li>
+
+      <li>
+        <a href="#Analytics">
+          <span>◈</span>
+          Analytics
+        </a>
+      </li>
+
+      <li>
+        <a href="#Support">
+          <span>?</span>
+          Support
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer">
+    <p>AI-powered sentiment analysis</p>
+    <span>v1.0</span>
+  </div>
+
+</aside>
+
+
+<!-- Main Content -->
+<main class="content">
+
+  <!-- Top Header -->
+  <header class="topBar">
+    <div>
+      <p class="eyebrow">SENTIMENT ANALYSIS PLATFORM</p>
+      <h1>Customer Feedback Intelligence</h1>
+    </div>
+
+    <div class="status">
+      <span class="status-dot"></span>
+      System Online
+    </div>
+  </header>
+
+
+  <!-- Home -->
+  <section id="Home" class="section home-section">
+
+    <div class="hero-text">
+      <p class="section-label">AI-POWERED ANALYSIS</p>
+
+      <h2>
+        Understand what your
+        <span>customers are saying.</span>
+      </h2>
+
+      <p class="description">
+        Analyze customer feedback using multilingual sentiment
+        analysis and transform text into meaningful insights.
+      </p>
+
+      <a href="#Analytics" class="primary-btn">
+        Analyze Feedback →
+      </a>
+    </div>
+
+
+    <div class="hero-card">
+
+      <div class="card-header">
+        <span>Latest Analysis</span>
+        <span class="positive-badge">Positive</span>
+      </div>
+
+      <div class="review">
+        <p>
+          "The service was excellent and the team helped us
+          improve our online presence."
+        </p>
+      </div>
+
+      <div class="analysis-details">
+
+        <div>
+          <span>Confidence</span>
+          <strong>96.8%</strong>
+        </div>
+
+        <div>
+          <span>Language</span>
+          <strong>English</strong>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- About -->
+  <section id="About" class="section">
+
+    <div class="section-heading">
+      <p class="section-label">ABOUT THE PROJECT</p>
+      <h2>Multilingual Sentiment Analysis</h2>
+    </div>
+
+    <div class="about-grid">
+
+      <div class="info-card">
+        <div class="icon">AI</div>
+        <h3>AI-Powered</h3>
+        <p>
+          Analyze textual feedback and determine the sentiment
+          expressed within the input.
+        </p>
+      </div>
+
+      <div class="info-card">
+        <div class="icon">ML</div>
+        <h3>Machine Learning</h3>
+        <p>
+          The backend processes the submitted text through a
+          machine-learning based sentiment analysis pipeline.
+        </p>
+      </div>
+
+      <div class="info-card">
+        <div class="icon">∞</div>
+        <h3>Multilingual</h3>
+        <p>
+          Supports sentiment analysis across multiple languages
+          through language detection and translation.
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- Analytics -->
+  <section id="Analytics" class="section">
+
+    <div class="section-heading">
+      <p class="section-label">ANALYTICS</p>
+      <h2>Sentiment Overview</h2>
+    </div>
+
+
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <span>Total Analyses</span>
+        <strong>1,248</strong>
+        <small>↑ 12.5% this month</small>
+      </div>
+
+      <div class="stat-card">
+        <span>Positive</span>
+        <strong>72%</strong>
+        <small>Customer sentiment</small>
+      </div>
+
+      <div class="stat-card">
+        <span>Neutral</span>
+        <strong>18%</strong>
+        <small>Customer sentiment</small>
+      </div>
+
+      <div class="stat-card">
+        <span>Negative</span>
+        <strong>10%</strong>
+        <small>Customer sentiment</small>
+      </div>
+
+    </div>
+
+
+    <div class="analysis-panel">
+
+      <div class="panel-header">
+        <div>
+          <span>Analyze Feedback</span>
+          <p>Enter customer feedback to analyze its sentiment.</p>
+        </div>
+      </div>
+
+      <textarea
+        id="input-feedback-text"
+        placeholder="Enter customer feedback here..."
+        maxlength="500"
+      ></textarea>
+
+      <div class="input-footer">
+        <span id = "total-character-present">0 / 500 characters</span>
+
+        <button 
+          id="analyze-sentiment-button-click"
+          class="primary-btn">
+          Analyze Sentiment
+        </button>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- Support -->
+  <section id="Support" class="section support-section">
+
+    <div class="section-heading">
+      <p class="section-label">SUPPORT</p>
+      <h2>Need help?</h2>
+
+      <p class="description">
+        If you are facing an issue while using the sentiment
+        analysis platform, please contact the support team.
+      </p>
+    </div>
+
+    <button class="secondary-btn">
+      Contact Support
+    </button>
+
+  </section>
+
+</main>
+
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
