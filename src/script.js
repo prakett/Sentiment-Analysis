@@ -2,6 +2,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalCharacterPresent = document.getElementById('total-character-present');
     const analyzeButtonSentiment = document.getElementById('analyze-sentiment-button-click');
     const inputFeedbackText = document.getElementById("input-feedback-text");
+    const positiveResultDisplay = document.getElementById("Positive-result");
+    const neutralResultDisplay = document.getElementById("Neutral-result");
+    const negativeResultDisplay = document.getElementById("Negative-result");
+
     const sentimentResult = document.getElementById("sentiment-result");
 
     analyzeButtonSentiment.addEventListener('click', async () => {
@@ -29,7 +33,21 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const result = await response.json();
-            sentimentResult.textContent = `${result.prediction} (${result.confidence}% confidence)`;
+
+            if (result.prediction === "Positive") {
+                positiveResultDisplay.textContent = `${result.confidence.toFixed(1)}%`;
+                neutralResultDisplay.textContent = `${(100 - result.confidence).toFixed(1)}%`;
+
+                negativeResultDisplay.textContent = `${(100 - result.confidence - 10).toFixed(1)}%`
+            }
+            else if (result.prediction === "Negative") {
+                negativeResultDisplay.textContent = `${result.confidence.toFixed(1)}%`;
+                neutralResultDisplay.textContent = `${(100 - result.confidence).toFixed(1)}%`;
+
+                positiveResultDisplay.textContent = `${(100 - result.confidence - 10).toFixed(1)}%`
+            }
+            
+
         } catch (error) {
             sentimentResult.textContent = "Could not connect to the sentiment API.";
             console.error(error);
