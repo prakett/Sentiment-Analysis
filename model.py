@@ -76,8 +76,3 @@ def predict_sentiment(text):
         },
         "threshold": THRESHOLD
     }
-
-
-from model import predict_sentiment
-
-predict_sentiment("I absolutely loved this movie.")
