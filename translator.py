@@ -85,23 +85,3 @@ def translate_to_english(text):
         "language": language,
         "translated_text": english
     }
-
-
-# ==========================================================
-# AUTOMATICALLY DOWNLOAD ALL TRANSLATION MODELS
-# ==========================================================
-
-if __name__ == "__main__":
-
-    print("Downloading/loading translation models...")
-    print(f"Using device: {device}")
-
-    for language in MODEL_NAMES:
-
-        load_model(language)
-
-        print(
-            f"{language} -> English model ready"
-        )
-
-    print("\nAll translation models are ready.")
