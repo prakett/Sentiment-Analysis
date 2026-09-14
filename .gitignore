@@ -1,12 +1,40 @@
+# Python
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+.venv/
+venv/
+
+# Datasets / training files
 dataset/
 dataset3/
 dataset4/
 dataset_pre_processed/
-start.bat
+
+# Training / experiment scripts
 graph.py
 dataset.py
 comparison.py
 finetune.py
-.venv
-*.pyc
+training.py
+prepro.py
+cleaning.py
+download_model.py
+save.py
+
+# Local startup script
+start.bat
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
