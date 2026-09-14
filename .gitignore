@@ -1,0 +1,12 @@
+__pycache__/
+dataset/
+dataset3/
+dataset4/
+dataset_pre_processed/
+requirements.txt
+start.bat
+graph.py
+dataset.py
+comparison.py
+finetune.py
+.venv
