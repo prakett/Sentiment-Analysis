@@ -8,24 +8,16 @@ __pycache__/
 .venv/
 venv/
 
-# Datasets / training files
+# Datasets
 dataset/
 dataset3/
 dataset4/
 dataset_pre_processed/
 
-# Training / experiment scripts
-graph.py
-dataset.py
-comparison.py
-finetune.py
-training.py
-prepro.py
-cleaning.py
-download_model.py
-save.py
+# Training checkpoints
+roberta_output/
 
-# Local startup script
+# Local startup
 start.bat
 
 # Jupyter
