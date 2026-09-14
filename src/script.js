@@ -1,6 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const totalCharacterPresent = document.getElementById('total-character-present');
-    const analyzeButtonSentiment = document.getElementById('analyze-sentiment-button-click');
+    const totalCharacterPresent = document.getElementById(
+        "total-character-present",
+    );
+    const analyzeButtonSentiment = document.getElementById(
+        "analyze-sentiment-button-click",
+    );
     const inputFeedbackText = document.getElementById("input-feedback-text");
     const positiveResultDisplay = document.getElementById("Positive-result");
     const neutralResultDisplay = document.getElementById("Neutral-result");
@@ -8,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const sentimentResult = document.getElementById("sentiment-result");
 
-    analyzeButtonSentiment.addEventListener('click', async () => {
+    analyzeButtonSentiment.addEventListener("click", async () => {
         const text = inputFeedbackText.value.trim();
 
         if (!text) {
@@ -20,16 +24,18 @@ document.addEventListener("DOMContentLoaded", () => {
         sentimentResult.textContent = "Analyzing...";
 
         try {
-            const response = await fetch("http://127.0.0.1:8000/predict", {
+            const response = await fetch("/predict", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ text })
+                body: JSON.stringify({ text }),
             });
 
             if (!response.ok) {
-                throw new Error(`Request failed with status ${response.status}`);
+                throw new Error(
+                    `Request failed with status ${response.status}`,
+                );
             }
 
             const result = await response.json();
@@ -38,18 +44,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 positiveResultDisplay.textContent = `${result.confidence.toFixed(1)}%`;
                 neutralResultDisplay.textContent = `${(100 - result.confidence).toFixed(1)}%`;
 
-                negativeResultDisplay.textContent = `${(100 - result.confidence - 10).toFixed(1)}%`
-            }
-            else if (result.prediction === "Negative") {
+                negativeResultDisplay.textContent = `${(100 - result.confidence - 10).toFixed(1)}%`;
+            } else if (result.prediction === "Negative") {
                 negativeResultDisplay.textContent = `${result.confidence.toFixed(1)}%`;
                 neutralResultDisplay.textContent = `${(100 - result.confidence).toFixed(1)}%`;
 
-                positiveResultDisplay.textContent = `${(100 - result.confidence - 10).toFixed(1)}%`
+                positiveResultDisplay.textContent = `${(100 - result.confidence - 10).toFixed(1)}%`;
             }
-            
-
         } catch (error) {
-            sentimentResult.textContent = "Could not connect to the sentiment API.";
+            sentimentResult.textContent =
+                "Could not connect to the sentiment API.";
             console.error(error);
         } finally {
             analyzeButtonSentiment.disabled = false;
@@ -57,9 +61,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // to keep track of each key pressed.
-    inputFeedbackText.addEventListener('keyup', () => {
+    inputFeedbackText.addEventListener("keyup", () => {
         const text = inputFeedbackText.value.trim();
         totalCharacterPresent.textContent = `${text.length} / 500 characters`;
-    })
-
-})
+    });
+});
